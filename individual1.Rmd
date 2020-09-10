@@ -7,9 +7,76 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
 ```
 
 ```{r}
+
 choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv") 
-str(choco)
+# Rating Distribution
+hist(choco$Rating, breaks = 10, xlab="Rating", main="Histogram of Chocolate Ratings")
+
+```
+
+```{r}
+boxplot(choco$Rating)
+```
+
+From this histogram we can see that the majority of the ratings fall in the 3-3.5 range. The boxplot shows there are outliers around 2.0 and lower for the rating and although the max rating is 5 there are no ratings above a 4 so that is one piece of information I found interesting.
+
+```{r}
+#Problem 2:
+chocoYearRating <- choco[,c('Date', 'Rating')]
+chocoYearRating <- chocoYearRating %>%
+  arrange(chocoYearRating$Date)
+aggregate(Rating ~ Date, data = chocoYearRating, mean)
+Table2 <- addmargins(table(chocoYearRating), 2)
+chocoSum <- as.data.frame(Table2)
+chocoSum <- chocoSum[chocoSum$Rating == "Sum", c('Date', 'Freq')]
+barplot(chocoSum$Freq, names.arg = chocoSum$Date, xlab = "Year", ylab="Count of Ratings", main="# Ratings per Year")
+```
+
+```{r}
+# Problem 3:
+chocoCocoa <- aggregate(Cocoa_Percent ~ Rating, data =choco, mean)
+plot(chocoCocoa, main="Cocoa Percent vs Average Rating")
+```
+
+```{r}
+chocoYearRating <- choco[,c('Cocoa_Percent', 'Rating')]
+Table2 <- addmargins(table(chocoYearRating), 2)
+chocoSum <- as.data.frame(Table2)
+chocoSum <- chocoSum[chocoSum$Rating == "Sum", c('Cocoa_Percent', 'Freq')]
+chocoSum <- chocoSum %>%
+  arrange(Freq) %>%
+  tail(5)
+chocoSum
+```
+The table shows that the highest rated percentages are 70, 75, and 72 which means the majority of the chocolate bars made have a percentage of 70, 75, and 72.
+
+```{r}
+choco
+chocoCocoa <- aggregate(Rating ~ Characteristics1, data =choco, mean, na.action = na.omit)
+chocoCocoa2 <- aggregate(Rating ~ Characteristics2, data =choco, mean, na.action = na.omit)
+chocoCocoa3 <- aggregate(Rating ~ Characteristics3, data =choco, mean, na.action = na.omit)
+chocoCocoa4 <- aggregate(Rating ~ Characteristics4, data =choco, mean, na.action = na.omit)
+chocoCocoa %>%
+  rename(
+    Characteristics = Characteristics1
+  )
+chocoCocoa2 %>%
+  rename(
+    Characteristics = Characteristics2
+  )
+chocoCocoa3 %>%
+  rename(
+    Characteristics = Characteristics3
+  )
+chocoCocoa4 %>%
+  rename(
+    Characteristics = Characteristics4
+  )
+chocoCocoa
+rbind(chocoCocoa, chocoCocoa2, chocoCocoa3, chocoCocoa4)
 ```
