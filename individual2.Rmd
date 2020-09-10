@@ -1,0 +1,82 @@
+---
+title: "Individual 2"
+author: "John King"
+date: "9/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Rating Distribution
+
+```{r}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
+hist(choco$Rating, breaks = seq(.75, 4, .25), xlab = "Rating", main = "Histogram of Chocolate Ratings")
+
+```
+
+From this histogram we can see that a majority of the ratings are collected around the 3.25 rating. A minor oddity lies in that the bin representing 3.25 is less than both the bin representing 3.0 and the bin representing 3.5. From this histogram it seems like the outliers are ratings 2 and less.
+
+```{r}
+boxplot(choco$Rating)
+```
+
+The idea that ratings 2 and less is also shown in the boxplot. The majority of the ratings lie in-between 2.25 and 4. This means that most of the chocolate in the database is Recommended or above, while very few chocolates are unpleasant. However, there ia a reasonable number of chocolates that are disappointing.
+
+## Number of Ratings per Year
+
+```{r}
+chocoYR <- choco[, c("Date", "Rating")]
+myTable <- addmargins(table(chocoYR), 2)
+chocos <- as.data.frame(myTable)
+chocos2 <- chocos[chocos$Rating == "Sum", c("Date", "Freq")]
+barplot(chocos2$Freq, names.arg = chocos2$Date, xlab = "Year", ylab = "Number of Ratings", main = "Number of Chocolate Ratings by Year")
+```
+
+There seems to be an upward trend in frequency of ratings from 2006-2015, but then the number of ratings began to significantly decrease. 2020 can be ignored as the year is not complete.
+
+## Ratings Based on Cacao Percentage
+
+```{r}
+chocoAgg <- aggregate(choco[, "Rating"], FUN = mean, list(choco$Cocoa_Percent))
+plot(chocoAgg, ylab = "Rating", xlab= "Cocoa Percentage", main = "Average Rating of Cocoa Percentages")
+```
+
+This chart is the average rating of each documented cocoa percentage. From this chart, there does not seem to be any strong relationship between cocoa percentage and rating. There seems to be a weak correlation that the rating decreases as the cocoa percentage decreases, but this could also be attributed to the number of ratings for chocolates of high cocoa percentage being much lower as shown by this table. 
+
+```{r}
+choco2 <- choco[, c("Rating", "Cocoa_Percent")]
+chocoTable <- addmargins(table(choco2), 1)
+chocos <- as.data.frame(chocoTable)
+chocos[chocos$Rating == "Sum", c("Cocoa_Percent","Freq")]
+```
+
+Notice how chocolates with cocoa percentages of 70, 72, and 75 have vastly more total ratings than any of the other cocoa percentages. This dataset simply is not populated with enough data to find any strong correlation between cocoa percentages and rating.
+
+## Favorable Characteristics
+
+## Scores Over the Years
+
+First, to see if evaluating how scores have changed over the years makes a valid comparison, we need to check if there is plenty of data to use each year.
+
+```{r}
+chocoYR <- choco[, c("Date", "Rating")]
+chocoTable <- addmargins(table(chocoYR), 2)
+chocos <- as.data.frame(chocoTable)
+chocos[chocos$Rating == "Sum", c("Date", "Freq")]
+```
+
+As can be seen by the table above, nearly every year has a plenitude of data. The first point of investigation is whether scoring tendencies have changed over time. We can check this by finding the average score in a year and plotting each average score in a scatterplot. The upcoming chart does this.
+
+```{r}
+chocoAgg <- aggregate(choco[, "Rating"], FUN = mean, list(choco$Date))
+plot(chocoAgg, main="Average rating per year", xlab = "Year", ylab = "Rating")
+
+```
+
+Before the analysis, note that the y-axis labels are from 3.0 to 3.4. For visibility's sake, the change in average rating between years has been exaggerated.
+The chart shows a slight positive correlation between year and rating. However, we have no knowledge of why this may be the case. Perhaps companies have been improving in making chocolate or perhaps the correlation might be due a shift in how database raters perceive the chocolate.
+
+
