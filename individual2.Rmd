@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
 hist(choco$Rating, breaks = seq(.75, 4, .25), xlab = "Rating", main = "Histogram of Chocolate Ratings")
+library(mltools)
+library(data.table)
 
 ```
 
@@ -56,6 +58,58 @@ chocos[chocos$Rating == "Sum", c("Cocoa_Percent","Freq")]
 Notice how chocolates with cocoa percentages of 70, 72, and 75 have vastly more total ratings than any of the other cocoa percentages. This dataset simply is not populated with enough data to find any strong correlation between cocoa percentages and rating.
 
 ## Favorable Characteristics
+
+First, we will find the average rating of each category. The most straightforward way to do this is to use the aggregate function on each category separately, leading to the creation of 4 different dataframes. 
+
+```{r}
+choco2 <- choco[, c("Characteristics1", "Characteristics2", "Characteristics3", "Characteristics4", "Rating")]
+chocoAgg <- aggregate(Rating ~ Characteristics1, data = choco2, FUN=mean)
+chocoAgg1 <- chocoAgg[order(chocoAgg$Rating), ]
+chocoAgg <- aggregate(Rating ~ Characteristics2, data = choco2, FUN=mean)
+chocoAgg2 <- chocoAgg[order(chocoAgg$Rating), ]
+chocoAgg <- aggregate(Rating ~ Characteristics3, data = choco2, FUN=mean)
+chocoAgg3 <- chocoAgg[order(chocoAgg$Rating), ]
+chocoAgg <- aggregate(Rating ~ Characteristics4, data = choco2, FUN=mean)
+chocoAgg4 <- chocoAgg[order(chocoAgg$Rating), ]
+```
+
+Now we will add a new column to merge the data with. 
+
+```{r}
+chocoAgg1["Characteristic"] <- chocoAgg1["Characteristics1"]
+chocoAgg2["Characteristic"] <- chocoAgg2["Characteristics2"]
+chocoAgg3["Characteristic"] <- chocoAgg3["Characteristics3"]
+chocoAgg4["Characteristic"] <- chocoAgg4["Characteristics4"]
+```
+
+Now, we will merge all the dataframes together, finding the average rating of each category while we do so. 
+
+```{r}
+chocoM <- merge(x = chocoAgg1, y=chocoAgg2, by = "Characteristic", all = T)
+chocoM["Rating"] <- rowMeans(chocoM[, c("Rating.x", "Rating.y")], na.rm = TRUE)
+chocoM <- chocoM[, c("Characteristic", "Rating")]
+chocoM <- merge(x = chocoM, y=chocoAgg3, by = "Characteristic", all = T)
+chocoM["Rating"] <- rowMeans(chocoM[, c("Rating.x", "Rating.y")], na.rm = TRUE)
+chocoM <- chocoM[, c("Characteristic", "Rating")]
+chocoM <- merge(x = chocoM, y=chocoAgg4, by = "Characteristic", all = T)
+chocoM["Rating"] <- rowMeans(chocoM[, c("Rating.x", "Rating.y")], na.rm = TRUE)
+chocoM <- chocoM[, c("Characteristic", "Rating")]
+```
+
+As we seek the best chocolate categories, we can safely filter out categories with an average rating below 3.7. In addition, we will want to avoid categories with average ratings of exactly 3.75 or 4.0 as categories with such scores likely are used rarely.
+
+```{r}
+chocoM <- chocoM[chocoM$Rating > 3.7 & !(chocoM$Rating == 3.75 | chocoM$Rating == 4), ]
+chocoM
+```
+
+Under these restrictions, these 8 categories stand out as the best.
+Finally, below lies a barplot to visualize the differences between these 8 categories.
+
+```{r}
+barplot(chocoM$Rating, names.arg = chocoM$Characteristic, las = 2)
+```
+
 
 ## Scores Over the Years
 
