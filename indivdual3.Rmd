@@ -1,0 +1,60 @@
+---
+title: "individual3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
+choco$Ingredients
+hist(choco$Rating, breaks = seq(.75, 4, .25), xlab = "Rating", main = "Histogram of Chocolate Ratings")
+nrow(choco)
+```
+
+```{r}
+threeIngredient <- choco$Ingredients == '3- B,S,C'        
+nrow(choco[threeIngredient, ])
+head(choco[threeIngredient, ], n =5)
+```
+
+
+```{r}
+twoIngredients <- choco$Ingredients == '2- B,S'        
+nrow(choco[twoIngredients, ])
+head(choco[twoIngredients, ], n =5)
+```
+
+```{r}
+fourIngredients <- choco$Ingredients == '4- B,S,C,V'        
+nrow(choco[fourIngredients, ])
+head(choco[fourIngredients, ], n =5)
+```
+
+```{r}
+fiveIngedient <- choco$Ingredients == '5-B,S,C,V,Sa'        
+nrow(choco[fiveIngedient, ])
+head(choco[fiveIngedient, ], n =5)
+```
+
+```{r}
+sixIngredients <- choco$Ingredients == '6-B,S,C,V,L,Sa'        
+nrow(choco[sixIngredients, ])
+head(choco[sixIngredients, ], n =5)
+```
+```{r}
+noIngredients <- choco$Ingredients == 'NA'        
+nrow(choco[noIngredients, ])
+head(choco[noIngredients, ], n =5)
+```
+```{r}
+specialFour <- choco$Ingredients == '4- B,S*,C,Sa'        
+nrow(choco[specialFour, ])
+head(choco[specialFour, ], n =5)
+```
+```{r}
+specialThree <- choco$Ingredients == '3- B,S*,C'        
+nrow(choco[specialThree, ])
+head(choco[specialThree, ], n =5)
+```
