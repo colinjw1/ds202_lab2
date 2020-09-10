@@ -9,3 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Colin's Answer Keep code below your section to keep from dealing with merge conflicts.
+
+## John's Answer
+
+## Allan's Answer
