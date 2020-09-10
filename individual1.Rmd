@@ -53,4 +53,30 @@ chocoSum <- chocoSum %>%
   tail(5)
 chocoSum
 ```
-This graph does a good job of showing that the 70% for Cocoa Percent is the most rated 
+The table shows that the highest rated percentages are 70, 75, and 72 which means the majority of the chocolate bars made have a percentage of 70, 75, and 72.
+
+```{r}
+choco
+chocoCocoa <- aggregate(Rating ~ Characteristics1, data =choco, mean, na.action = na.omit)
+chocoCocoa2 <- aggregate(Rating ~ Characteristics2, data =choco, mean, na.action = na.omit)
+chocoCocoa3 <- aggregate(Rating ~ Characteristics3, data =choco, mean, na.action = na.omit)
+chocoCocoa4 <- aggregate(Rating ~ Characteristics4, data =choco, mean, na.action = na.omit)
+chocoCocoa %>%
+  rename(
+    Characteristics = Characteristics1
+  )
+chocoCocoa2 %>%
+  rename(
+    Characteristics = Characteristics2
+  )
+chocoCocoa3 %>%
+  rename(
+    Characteristics = Characteristics3
+  )
+chocoCocoa4 %>%
+  rename(
+    Characteristics = Characteristics4
+  )
+chocoCocoa
+rbind(chocoCocoa, chocoCocoa2, chocoCocoa3, chocoCocoa4)
+```
