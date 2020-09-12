@@ -11,6 +11,8 @@ library(ggplot2)
 library(tidyverse)
 ```
 
+1. Ratings distributed
+
 ```{r}
 
 choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv") 
@@ -25,17 +27,16 @@ boxplot(choco$Rating)
 
 From this histogram we can see that the majority of the ratings fall in the 3-3.5 range. The boxplot shows there are outliers around 2.0 and lower for the rating and although the max rating is 5 there are no ratings above a 4 so that is one piece of information I found interesting.
 
+2. Ratings based on Year
+
 ```{r}
 #Problem 2:
-chocoYearRating <- choco[,c('Date', 'Rating')]
-chocoYearRating <- chocoYearRating %>%
-  arrange(chocoYearRating$Date)
-aggregate(Rating ~ Date, data = chocoYearRating, mean)
-Table2 <- addmargins(table(chocoYearRating), 2)
-chocoSum <- as.data.frame(Table2)
-chocoSum <- chocoSum[chocoSum$Rating == "Sum", c('Date', 'Freq')]
-barplot(chocoSum$Freq, names.arg = chocoSum$Date, xlab = "Year", ylab="Count of Ratings", main="# Ratings per Year")
+barplot(table(choco$Date), xlab = "Year", ylab="Count of Ratings", main="# Ratings per Year")
 ```
+The graph has an upward trend until the year 2015 where it then drops off and has a smaller rise and fall between the years 2016 and 2019
+
+
+3. Cocoa Percentage Ratings
 
 ```{r}
 # Problem 3:
@@ -55,28 +56,62 @@ chocoSum
 ```
 The table shows that the highest rated percentages are 70, 75, and 72 which means the majority of the chocolate bars made have a percentage of 70, 75, and 72.
 
+4. Analysis of Characteristics 
+
 ```{r}
-choco
-chocoCocoa <- aggregate(Rating ~ Characteristics1, data =choco, mean, na.action = na.omit)
-chocoCocoa2 <- aggregate(Rating ~ Characteristics2, data =choco, mean, na.action = na.omit)
-chocoCocoa3 <- aggregate(Rating ~ Characteristics3, data =choco, mean, na.action = na.omit)
-chocoCocoa4 <- aggregate(Rating ~ Characteristics4, data =choco, mean, na.action = na.omit)
-chocoCocoa %>%
-  rename(
-    Characteristics = Characteristics1
-  )
-chocoCocoa2 %>%
-  rename(
-    Characteristics = Characteristics2
-  )
-chocoCocoa3 %>%
-  rename(
-    Characteristics = Characteristics3
-  )
-chocoCocoa4 %>%
-  rename(
-    Characteristics = Characteristics4
-  )
-chocoCocoa
-rbind(chocoCocoa, chocoCocoa2, chocoCocoa3, chocoCocoa4)
+# Problem 4
+chocoChar <- choco[, c("Characteristics1", "Characteristics2", "Characteristics3", "Characteristics4", "Rating")]
+chocoChar <- choco %>%
+  select(Characteristics1, Rating) %>%
+  rename(Characteristics = Characteristics1)
+
+temp <- choco %>%
+  select(Characteristics2, Rating) %>%
+  rename(Characteristics = Characteristics2)
+chocoChar <- rbind(chocoChar, temp, na.rm=TRUE)
+temp <- choco %>%
+  select(Characteristics3, Rating) %>%
+  rename(Characteristics = Characteristics3)
+chocoChar <- rbind(chocoChar, temp, na.rm=TRUE)
+temp <- choco %>%
+  select(Characteristics4, Rating) %>%
+  rename(Characteristics = Characteristics4)
+chocoChar <- rbind(chocoChar, temp, na.rm=TRUE)
+chocoChar <- aggregate(.~Characteristics, data=chocoChar, mean)
+```
+
+The data is now in a dataframe that holds the unique characteristics and their average ratings. The total characteristics is 851 so a graph with that much data is useless to a user. So this next part will take a look at the top 10 and bottom 10 categories.
+
+```{r}
+chocoBottom <- head(chocoChar,10)
+chocoTop <- tail(chocoChar, 10)
+chocoBottom
+```
+
+```{r}
+ggplot(chocoBottom, aes(x=Characteristics, y=Rating)) + geom_point() + theme(axis.text.x  = element_text(angle=45, hjust=1, vjust=1))
+```
+```{r}
+ggplot(chocoTop, aes(x=Characteristics, y=Rating)) + geom_point() + theme(axis.text.x  = element_text(angle=45, hjust=1, vjust=1))
+```
+
+The above graphs and tables show the top 10 and bottom 10 characteristics based on ratings.
+
+
+5. Problem 5, I was tasked with best rated companies.
+```{r}
+# Problem 5 best company over all.
+RateCompany <- choco %>%
+  group_by(Company) %>%
+  summarise_at(vars(Rating), funs(mean(., na.rm=TRUE))) %>%
+  arrange(-Rating)
+plot(factor(RateCompany$Company), RateCompany$Rating, main="Ratings vs Companies", las=3)
+```
+
+```{r}
+RateCompany
+```
+
+```{r}
+tail(RateCompany,10)
 ```

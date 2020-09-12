@@ -1,16 +1,34 @@
 ---
 title: "team"
-author: "Colin Willenborg"
+author: "Colin Willenborg, John King, Allan Juarez"
 date: "9/8/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
 ```
 
-## Colin's Answer Keep code below your section to keep from dealing with merge conflicts.
+## The Best rated Companies - Colin Willenborg
+```{r}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
+# Problem 5 best company over all.
+RateCompany <- choco %>%
+  group_by(Company) %>%
+  summarise_at(vars(Rating), funs(mean(., na.rm=TRUE))) %>%
+  arrange(-Rating)
+plot(factor(RateCompany$Company), RateCompany$Rating, main="Ratings vs Companies", las=3)
+```
 
+```{r}
+RateCompany
+```
+
+```{r}
+tail(RateCompany,10)
+```
 ## John's Answer
 
 ## Allan's Answer
