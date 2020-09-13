@@ -6,55 +6,91 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+1. Rating Distribution
 ```{r}
 choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
-choco$Ingredients
-hist(choco$Rating, breaks = seq(.75, 4, .25), xlab = "Rating", main = "Histogram of Chocolate Ratings")
-nrow(choco)
+summary(choco)
+hist(choco$Rating, breaks = seq(0,5, by=.25), xlab = "Rating", main = "Histogram of Chocolate Ratings")
+```
+Almost all of the data is between a rating of 2 and 4 while having the biggest amount of ratings at around 3.25 to 3.5.
+
+```{r}
+ boxplot(choco$Rating)
+```
+The box plot tells us what we already know from the histogram, but gives us a clear idea of what outliers there are. There are 4 outliers ranging from 2.0 to 1.0
+
+
+2.How does the number of ratings depend on the year? Draw a bar chart of the number of reports.
+```{r}
+twoColumn <- choco[c(4,13)]
+barplot(table(twoColumn$Date), xlab = "year" , ylab = "Count of Rating", main = "number of ratings per year")
+```
+from 06 to 15 there is an upward trend in total trends. So maybe having more ratings increases the exposure of chocolates to the public and that brings up the rise in more ratings as there will be more people eating chocolate. Of course theres an obvious outlier in 2017, but that couldve been because chocolate reviews got overshadowed by an election year. Also 2020 is low from 2020 not being done and COVID.
+
+3.Do ratings depend on the cacao percentage of a chocolate bar?
+```{r}
+grouping <- aggregate(choco$Rating,, by = list(choco$Cocoa_Percent),FUN = mean,na.rm=TRUE)
+plot(grouping, xlab= "Cocoa Percent", ylab ="Rating", main="Ratings of each Different Cocoa Percent")
+
+```
+
+There does not seem to be any correlation between Cocoa percentage and Rating looking at this graph all the data points are everywhere
+
+```{r} 
+twoColumnCocoa <- choco[c(4,7)]
+tableChoco <- table(twoColumnCocoa)
+tableChoco <- addmargins(tableChoco, 1)
+tableChoco<-as.data.frame(tableChoco)
+tableChoco[tableChoco$Date == 'Sum', c('Cocoa_Percent', 'Freq')]
 ```
 
 ```{r}
-threeIngredient <- choco$Ingredients == '3- B,S,C'        
-nrow(choco[threeIngredient, ])
-head(choco[threeIngredient, ], n =5)
+threeIngredient <- choco$Ingredients == '3- B,S,C'
+three <- choco[threeIngredient,]
 ```
 
 
 ```{r}
-twoIngredients <- choco$Ingredients == '2- B,S'        
-nrow(choco[twoIngredients, ])
-head(choco[twoIngredients, ], n =5)
+twoIngredients <- choco$Ingredients == '2- B,S'
+two <- choco[twoIngredients,]
 ```
 
 ```{r}
-fourIngredients <- choco$Ingredients == '4- B,S,C,V'        
-nrow(choco[fourIngredients, ])
-head(choco[fourIngredients, ], n =5)
+fourIngredients <- choco$Ingredients == '4- B,S,C,V'
+four <- choco[fourIngredients,]
 ```
 
 ```{r}
-fiveIngedient <- choco$Ingredients == '5-B,S,C,V,Sa'        
-nrow(choco[fiveIngedient, ])
-head(choco[fiveIngedient, ], n =5)
+fiveIngedient <- choco$Ingredients == '5-B,S,C,V,Sa'
+five <- choco[fiveIngedient,]
 ```
 
 ```{r}
-sixIngredients <- choco$Ingredients == '6-B,S,C,V,L,Sa'        
-nrow(choco[sixIngredients, ])
-head(choco[sixIngredients, ], n =5)
+sixIngredients <- choco$Ingredients == '6-B,S,C,V,L,Sa'
+six <- choco[sixIngredients,]
+```
+
+```{r}
+specialFour <- choco$Ingredients == '4- B,S*,C,Sa'
+specFour <- choco[specialFour,]
 ```
 ```{r}
-noIngredients <- choco$Ingredients == 'NA'        
-nrow(choco[noIngredients, ])
-head(choco[noIngredients, ], n =5)
+specialThree <- choco$Ingredients == '3- B,S*,C'
+specThree <- choco[specialThree,]
 ```
+
 ```{r}
-specialFour <- choco$Ingredients == '4- B,S*,C,Sa'        
-nrow(choco[specialFour, ])
-head(choco[specialFour, ], n =5)
-```
-```{r}
-specialThree <- choco$Ingredients == '3- B,S*,C'        
-nrow(choco[specialThree, ])
-head(choco[specialThree, ], n =5)
+mean(two$Rating, na.rm = TRUE)
+
+mean(three$Rating, na.rm = TRUE)
+
+mean(four$Rating, na.rm = TRUE)
+
+mean(five$Rating, na.rm = TRUE)
+
+mean(six$Rating, na.rm = TRUE)
+
+mean(specThree$Rating, na.rm = TRUE)
+mean(specFour$Rating, na.rm = TRUE)
 ```
