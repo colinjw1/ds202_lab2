@@ -29,6 +29,27 @@ RateCompany
 ```{r}
 tail(RateCompany,10)
 ```
-## John's Answer
+
+## Change in scoring over the years - John King
+
+First, to see if evaluating how scores have changed over the years makes a valid comparison, we need to check if there is plenty of data to use each year.
+
+```{r}
+chocoYR <- choco[, c("Date", "Rating")]
+chocoTable <- addmargins(table(chocoYR), 2)
+chocos <- as.data.frame(chocoTable)
+chocos[chocos$Rating == "Sum", c("Date", "Freq")]
+```
+
+As can be seen by the table above, nearly every year has a plenitude of data. The first point of investigation is whether scoring tendencies have changed over time. We can check this by finding the average score in a year and plotting each average score in a scatterplot. The upcoming chart does this.
+
+```{r}
+chocoAgg <- aggregate(choco[, "Rating"], FUN = mean, list(choco$Date))
+plot(chocoAgg, main="Average rating per year", xlab = "Year", ylab = "Rating")
+
+```
+
+Before the analysis, note that the y-axis labels are from 3.0 to 3.4. For visibility's sake, the change in average rating between years has been exaggerated.
+The chart shows a slight positive correlation between year and rating. However, we have no knowledge of why this may be the case. Perhaps companies have been improving in making chocolate or perhaps the correlation might be due a shift in how database raters perceive the chocolate.
 
 ## Allan's Answer
