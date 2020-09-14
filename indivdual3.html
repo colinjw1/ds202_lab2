@@ -464,6 +464,11 @@ tableChoco[tableChoco$Date == &#39;Sum&#39;, c(&#39;Cocoa_Percent&#39;, &#39;Fre
 ## 704            91    3
 ## 720            99    2
 ## 736           100   20</code></pre>
+<p>The data set shows that many of the ratings have cocoa percent between 70 to 75 percent and that there are not that many ratings for chocolates outside of that percent.</p>
+<p>4.How do different characteristics of the chocolate compare? To elaborate, which characteristics tend to be more favorable and which ones are not?</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Rating of chocolate depending on how many ingredients there are</li>
+</ol>
 <pre class="r"><code>threeIngredient &lt;- choco$Ingredients == &#39;3- B,S,C&#39;
 three &lt;- choco[threeIngredient,]</code></pre>
 <pre class="r"><code>twoIngredients &lt;- choco$Ingredients == &#39;2- B,S&#39;

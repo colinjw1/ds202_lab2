@@ -53,3 +53,35 @@ Before the analysis, note that the y-axis labels are from 3.0 to 3.4. For visibi
 The chart shows a slight positive correlation between year and rating. However, we have no knowledge of why this may be the case. Perhaps companies have been improving in making chocolate or perhaps the correlation might be due a shift in how database raters perceive the chocolate.
 
 ## Allan's Answer
+
+```{r}
+
+twoIngredients <- choco$Ingredients == '2- B,S'
+two <- choco[twoIngredients,]
+threeIngredient <- choco$Ingredients == '3- B,S,C'
+three <- choco[threeIngredient,]
+fourIngredients <- choco$Ingredients == '4- B,S,C,V'
+four <- choco[fourIngredients,]
+fiveIngedient <- choco$Ingredients == '5-B,S,C,V,Sa'
+five <- choco[fiveIngedient,]
+sixIngredients <- choco$Ingredients == '6-B,S,C,V,L,Sa'
+six <- choco[sixIngredients,]
+specialFour <- choco$Ingredients == '4- B,S*,C,Sa'
+specFour <- choco[specialFour,]
+specialThree <- choco$Ingredients == '3- B,S*,C'
+specThree <- choco[specialThree,]
+
+data <- c(0,mean(two$Rating, na.rm = TRUE),
+mean(three$Rating, na.rm = TRUE),
+mean(four$Rating, na.rm = TRUE),
+mean(five$Rating, na.rm = TRUE),
+mean(six$Rating, na.rm = TRUE),
+mean(specThree$Rating, na.rm = TRUE),
+mean(specFour$Rating, na.rm = TRUE))
+
+name <- c("two", "three", "four", "five", "six", "three*", "four*")
+
+
+plot(data, main =" average ratings per number of ingredients" ,xlab= "number of ingredients",xlim = c(2, 7) , ylab = "rating", ylim =c(2.5,3.5))
+
+```

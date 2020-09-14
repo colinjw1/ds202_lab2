@@ -44,7 +44,15 @@ tableChoco <- addmargins(tableChoco, 1)
 tableChoco<-as.data.frame(tableChoco)
 tableChoco[tableChoco$Date == 'Sum', c('Cocoa_Percent', 'Freq')]
 ```
+The data set shows that many of the ratings have cocoa percent between 70 to 75 percent and that there are not that many ratings for chocolates outside of that percent.
 
+4.How do different characteristics of the chocolate compare? To elaborate, which characteristics tend to be more favorable and which ones are not?
+```{r}
+
+```
+
+
+5. Rating of chocolate depending on how many ingredients there are
 ```{r}
 threeIngredient <- choco$Ingredients == '3- B,S,C'
 three <- choco[threeIngredient,]
