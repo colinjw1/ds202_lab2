@@ -82,6 +82,7 @@ mean(specFour$Rating, na.rm = TRUE))
 name <- c("two", "three", "four", "five", "six", "three*", "four*")
 
 
-plot(data, main =" average ratings per number of ingredients" ,xlab= "number of ingredients",xlim = c(2, 7) , ylab = "rating", ylim =c(2.5,3.5))
+plot(data, main =" average ratings per number of ingredients" ,xlab= "number of ingredients",xlim = c(2, 8) , ylab = "rating", ylim =c(2.5,3.5))
 
 ```
+The best rating only had three ingredients. After three the ratings drop significantly and never really rose until 8 which is also three ingredients but they had some sort of special ingredients. Three ingredients had a high of 3.27 rating and the lowest rating was six ingredients of 2.79. It seems optimal to only use three or two ingredients to get a higher rating.
