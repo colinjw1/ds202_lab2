@@ -48,8 +48,37 @@ The data set shows that many of the ratings have cocoa percent between 70 to 75 
 
 4.How do different characteristics of the chocolate compare? To elaborate, which characteristics tend to be more favorable and which ones are not?
 ```{r}
+one <- choco[, c("Rating","Characteristics1")]
+one <- setNames(aggregate(one$Rating, by = list(one$Characteristics1),FUN = mean,na.rm=TRUE), c("Characteristics", "Rating"))
 
+two <- choco[,c("Rating","Characteristics2")]
+two <- setNames(aggregate(two$Rating, by = list(two$Characteristics2),FUN = mean,na.rm=TRUE), c("Characteristics", "Rating1"))
+one <- merge(one, two,by= "Characteristics")
+
+three <- choco[,c("Rating","Characteristics3")]
+three <- setNames(aggregate(three$Rating, by = list(three$Characteristics3),FUN = mean,na.rm=TRUE), c("Characteristics", "Rating2"))
+
+one <- merge(one, three,by= "Characteristics")
+
+four <- choco[,c("Rating","Characteristics4")]
+four <- setNames(aggregate(four$Rating, by = list(four$Characteristics4),FUN = mean,na.rm=TRUE), c("Characteristics", "Rating3"))
+
+one <- merge(one, four,by= "Characteristics")
+name <- one$Characteristic
+one <- rowMeans(one[,c("Rating", "Rating1", "Rating2", "Rating3")], na.rm = FALSE, dims = 1)
+charRank<- data.frame(name,one)
+charRank <- charRank[order(-charRank$one),]
+charRank <-head(charRank, n = 12)
+tail(charRank, n =6)
 ```
+Looking at the ranks for the characteristics any chocolate with a raspberry characteristics seems to be the most favorable. The worst characteristic was chemical with an average rating of 2.33 
+
+```{r}
+barplot(charRank$one, names.arg = charRank$name, las =2)
+```
+
+
+This is a visualization of the top 12 characteristics of a good rating.
 
 
 5. Rating of chocolate depending on how many ingredients there are
